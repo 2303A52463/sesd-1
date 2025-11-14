@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LMS Layered Architecture</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        form {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin-top: 8px;
+        }
+        input, select, button {
+            margin-top: 5px;
+            padding: 8px;
+            width: 100%;
+            max-width: 300px;
+        }
+        button {
+            background: #2980b9;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #3498db;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        li {
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Learning Management System - Presentation Layer</h1>
+
+    <h2>Add Course</h2>
+    <form id="courseForm">
+        <label for="courseId">Course ID:</label>
+        <input type="text" id="courseId" required>
+        <label for="courseName">Course Name:</label>
+        <input type="text" id="courseName" required>
+        <button type="submit">Add Course</button>
+    </form>
+
+    <h2>Add Student</h2>
+    <form id="studentForm">
+        <label for="studentId">Student ID:</label>
+        <input type="text" id="studentId" required>
+        <label for="studentName">Student Name:</label>
+        <input type="text" id="studentName" required>
+        <button type="submit">Add Student</button>
+    </form>
+
+    <h2>Enroll Student</h2>
+    <form id="enrollForm">
+        <label for="enrollStudentId">Student ID:</label>
+        <input type="text" id="enrollStudentId" required>
+        <label for="enrollCourseId">Course ID:</label>
+        <input type="text" id="enrollCourseId" required>
+        <button type="submit">Enroll</button>
+    </form>
+
+    <h2>Students Enrolled in Course</h2>
+    <form id="listStudentsForm">
+        <label for="listCourseId">Course ID:</label>
+        <input type="text" id="listCourseId" required>
+        <button type="submit">List Students</button>
+    </form>
+
+    <ul id="studentsList"></ul>
+
+    <script>
+        // In-memory data stores for demo (simulate layers)
+        const courses = {};
+        const students = {};
+        const enrollments = {};
+
+        // Add Course form logic
+        document.getElementById('courseForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const courseId = document.getElementById('courseId').value.trim();
+            const courseName = document.getElementById('courseName').value.trim();
+            if (courseId && courseName) {
+                courses[courseId] = courseName;
+                alert(`Course added: ${courseName} (${courseId})`);
+                this.reset();
+            }
+        });
+
+        // Add Student form logic
+        document.getElementById('studentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const studentId = document.getElementById('studentId').value.trim();
+            const studentName = document.getElementById('studentName').value.trim();
+            if (studentId && studentName) {
+                students[studentId] = studentName;
+                alert(`Student added: ${studentName} (${studentId})`);
+                this.reset();
+            }
+        });
+
+        // Enroll Student form logic
+        document.getElementById('enrollForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const studentId = document.getElementById('enrollStudentId').value.trim();
+            const courseId = document.getElementById('enrollCourseId').value.trim();
+            if (!(studentId in students)) {
+                alert("Student ID does not exist.");
+                return;
+            }
+            if (!(courseId in courses)) {
+                alert("Course ID does not exist.");
+                return;
+            }
+            if (!(courseId in enrollments)) {
+                enrollments[courseId] = [];
+            }
+            enrollments[courseId].push(studentId);
+            alert(`Enrolled student ${students[studentId]} (${studentId}) in course ${courses[courseId]} (${courseId})`);
+            this.reset();
+        });
+
+        // List Students in Course form logic
+        document.getElementById('listStudentsForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const courseId = document.getElementById('listCourseId').value.trim();
+            const studentsList = document.getElementById('studentsList');
+            studentsList.innerHTML = '';
+            if (!(courseId in courses)) {
+                alert("Course ID does not exist.");
+                return;
+            }
+            const enrolledStudents = enrollments[courseId] || [];
+            if (enrolledStudents.length === 0) {
+                studentsList.innerHTML = `<li>No students enrolled in ${courses[courseId]}.</li>`;
+            } else {
+                enrolledStudents.forEach(sid => {
+                    studentsList.innerHTML += `<li>${students[sid]} (${sid})</li>`;
+                });
+            }
+            this.reset();
+        });
+    </script>
+</body>
+</html>
