@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LMS Layered Architecture - Presentation Layer</title>
+</head>
+<body>
+    <h1>Learning Management System</h1>
+
+    <h2>Add Course</h2>
+    <form id="courseForm">
+        Course ID: <input type="text" id="courseId" required><br>
+        Course Name: <input type="text" id="courseName" required><br>
+        <button type="submit">Add Course</button>
+    </form>
+
+    <h2>Add Student</h2>
+    <form id="studentForm">
+        Student ID: <input type="text" id="studentId" required><br>
+        Student Name: <input type="text" id="studentName" required><br>
+        <button type="submit">Add Student</button>
+    </form>
+
+    <h2>Enroll Student</h2>
+    <form id="enrollForm">
+        Student ID: <input type="text" id="enrollStudentId" required><br>
+        Course ID: <input type="text" id="enrollCourseId" required><br>
+        <button type="submit">Enroll</button>
+    </form>
+
+    <h2>Students Enrolled in a Course</h2>
+    <form id="listStudentsForm">
+        Course ID: <input type="text" id="listCourseId" required><br>
+        <button type="submit">List Students</button>
+    </form>
+    <ul id="studentsList"></ul>
+
+    <script>
+        // Basic example to handle form interaction. Actual business logic and data access should be implemented on the server side.
+        document.getElementById('listStudentsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let courseId = document.getElementById('listCourseId').value;
+            // For demonstration, just show dummy response
+            document.getElementById('studentsList').innerHTML = `<li>Student1 enrolled in course ${courseId}</li><li>Student2 enrolled in course ${courseId}</li>`;
+        });
+
+        // Similarly, form handlers for Add Course, Add Student, and Enroll Student can be implemented with backend APIs.
+    </script>
+</body>
+</html>
